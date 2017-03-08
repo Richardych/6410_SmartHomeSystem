@@ -1,0 +1,23 @@
+f [ -e /etc/friendlyarm-ts-input.conf ] ; then
+. /etc/friendlyarm-ts-input.conf
+fi
+true ${TSLIB_TSDEVICE:=/dev/touchscreen}
+TSLIB_CONFFILE=/etc/ts.conf
+export TSLIB_TSDEVICE
+export TSLIB_CONFFILE
+export TSLIB_PLUGINDIR=/usr/lib/ts
+export TSLIB_CALIBFILE=/etc/pointercal
+export QWS_DISPLAY=:1
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export PATH=/bin:/sbin:/usr/bin/:/usr/sbin:/usr/local/bin
+if [ -c /dev/touchscreen ]; then
+export QWS_MOUSE_PROTO="Tslib MouseMan:/dev/input/mice"
+if [ ! -s /etc/pointercal ] ; then
+rm /etc/pointercal
+/usr/bin/ts_calibrate
+fi
+else
+export QWS_MOUSE_PROTO="MouseMan:/dev/input/mice"
+fi
+export QWS_KEYBOARD=TTY:/dev/tty1
+export HOME=/root
